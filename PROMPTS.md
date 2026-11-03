@@ -153,15 +153,29 @@ values, parallelism/skew, scans, lookups, eager spools, and warnings. Never use
 relative estimated cost percentages as measurements.
 
 Return:
-- a comparison table with the relevant measurements for every plan;
-- the actual root cause in each plan, with operator node IDs and evidence;
-- which plan is preferable and under what parameter and workload conditions;
-- regressions and improvements between plans;
+- a one-sentence overall verdict, followed by a one-sentence comparability
+  statement;
+- an aggregate GitHub-flavored Markdown table with `Metric`, one column per
+  plan, and `Better` or `Difference`. Include statements, elapsed time, CPU,
+  logical and physical reads when present, peak memory grant and used memory,
+  spills, DOP, and other measured metrics that explain the result;
+- for a multi-statement batch, a per-statement Markdown table showing the
+  statements that materially contribute to the difference. Include elapsed
+  time, CPU or reads when available, and concise notes;
+- `How they differ` and `Why [the material regression or improvement]`
+  sections. Cite operator node IDs, self time, rows per execution, spill
+  writes, memory grants, lookup executions, and other evidence used;
+- the actual root cause in each plan, regressions and improvements, and which
+  plan is preferable under which parameter and workload conditions;
 - whether a query or script rewrite, index change, statistics change, or no
   change is justified, naming the expected plan mechanism for every
   recommendation;
 - risks, including write cost, parameter sensitivity, and workload impact; and
 - a validation plan.
+
+Use tables and concise bullets, not a raw plan dump. Do not invent totals,
+combine non-equivalent batches, or mark one plan as better when comparable
+runtime evidence is absent.
 
 Validate the selected candidate in a non-production environment that closely
 matches production, preferably a restored production database copy. Run each
