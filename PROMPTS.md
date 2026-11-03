@@ -19,6 +19,7 @@ Provide the following artifacts with either prompt:
 | Parameters | Representative runtime parameter values and the execution scenario they represent. |
 | Execution plan | A complete **actual** `.sqlplan` file or actual `SHOWPLAN_XML` document. Do not use an estimated plan to claim what was slow. Attach the plan file rather than pasting raw XML. |
 | Existing indexes | Key columns and sort direction, included columns, filters, and uniqueness for every referenced table. |
+| Validation environment | For any proposed change, a non-production development or QA environment that matches production compatibility level, schema, indexes, statistics, and data distribution as closely as possible. A restored production database copy is preferred. |
 
 Supply these artifacts when available:
 
@@ -42,7 +43,7 @@ Use /query-plan-analysis and /sqlserver-index-analysis.
 
 Analyze the supplied SQL Server query, actual execution plan (.sqlplan or
 SHOWPLAN_XML), existing indexes, Query Store evidence, and
-dbo.usp_IndexAnalysis REALIGN output when supplied.
+[YourUtilityDatabase].dbo.usp_IndexAnalysis REALIGN output when supplied.
 
 First determine what was actually slow and why using runtime evidence only:
 operator self elapsed/CPU time, actual versus estimated rows per execution,
@@ -50,6 +51,12 @@ warnings, spills, memory grants, compiled versus runtime parameters, and
 parallelism. Do not use estimated cost percentages as measurements. Do not
 call a scan or key lookup bad without row-count and runtime evidence. Treat
 missing-index suggestions and generated index DDL only as hypotheses.
+
+Also assess whether a query or script change would remove a demonstrated cause.
+Recommend a script change only when the actual plan supports its mechanism.
+Name the expected plan change and do not claim that two SQL constructs are
+equivalent without evidence. If no supported rewrite exists, state "no script
+change recommended."
 
 Then recommend at most one index only if it resolves a demonstrated Sort,
 Group By, window-processing operation, repeated key lookup, selective scan, or
@@ -69,16 +76,22 @@ Consider storage and write-maintenance cost across the broader workload.
 
 Return:
 - a concise root-cause finding with cited plan evidence;
+- either one proposed script change with its expected plan mechanism or "no
+  script change recommended";
 - either one proposed CREATE INDEX statement or "no index recommended";
 - key order, INCLUDE columns, and filter rationale;
 - expected plan change;
 - write, maintenance, and overlap risks; and
 - a validation plan comparing baseline and candidate actual plans using elapsed
   time, CPU, logical reads, spills, lookup executions, and Query Store
-  regression data.
+  regression data. Run both cases with the same representative production
+  parameter values in a non-production environment, preferably a restored
+  production database copy. Include different selectivity cases when parameter
+  sensitivity is suspected.
 
-Do not execute DDL. If the plan is estimated or evidence is insufficient,
-recommend no index and explain what artifact is missing.
+Do not execute DDL or script changes. If the plan is estimated or evidence is
+insufficient, recommend no index or script change and explain what artifact is
+missing.
 ```
 
 ## Prompt: index selection only
@@ -91,13 +104,16 @@ Use /sqlserver-index-analysis.
 
 Evaluate this SQL Server query for one evidence-backed index recommendation. I
 am providing the query, representative parameter values, actual plan digest,
-existing indexes, Query Store evidence, and dbo.usp_IndexAnalysis REALIGN
+existing indexes, Query Store evidence, and
+[YourUtilityDatabase].dbo.usp_IndexAnalysis REALIGN
 output where available.
 
 Assess conventional nonclustered, covering, filtered, POC, and FPOC candidates.
 Return at most one proposed CREATE INDEX statement or "no index recommended,"
 with key order, INCLUDE/filter rationale, expected plan change, write and
-overlap risk, and validation steps. Do not execute DDL.
+overlap risk, and validation steps. Test with the same representative production
+parameter values in a non-production environment that closely matches
+production, preferably a restored production database copy. Do not execute DDL.
 
 If the supplied plan is estimated, incomplete, or does not show a demonstrated
 indexable problem, do not infer a bottleneck or recommend an index. State the

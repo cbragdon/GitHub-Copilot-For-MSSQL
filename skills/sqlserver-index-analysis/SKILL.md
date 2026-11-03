@@ -65,6 +65,10 @@ Before considering an index, establish:
 
 Do not call scans or lookups bad without row-count and runtime evidence.
 
+Recommend a query or script change only when actual plan evidence supports its
+mechanism. Name the expected plan change and do not claim that two SQL
+constructs are equivalent without evidence.
+
 ## Candidate design rules
 
 Recommend at most one index, and only if it resolves demonstrated work without
@@ -105,7 +109,9 @@ Return:
 5. Write, maintenance, and overlap risks.
 6. A validation plan comparing baseline and candidate actual plans using elapsed
    time, CPU, logical reads, spills, lookup executions, and Query Store
-   regression data.
+   regression data in a non-production environment that closely matches
+   production. Use the same representative production parameter values; a
+   restored production database copy is preferred.
 
 If the evidence does not meet these requirements, recommend no index and explain
 why.
