@@ -106,12 +106,16 @@ missing artifact or evidence instead.
 
 ## Using `usp_IndexAnalysis`
 
-Only run `DBAdmin.dbo.usp_IndexAnalysis` when complete actual `SHOWPLAN_XML` is
-available and the user explicitly authorizes access to the intended SQL Server.
+Only run `[YourUtilityDatabase].dbo.usp_IndexAnalysis` when complete actual
+`SHOWPLAN_XML` is available and the user explicitly authorizes access to the
+intended SQL Server. The procedure can be installed in any existing database;
+a dedicated utility database such as `DBAdmin` is recommended. See
+[USP-INDEXANALYSIS.md](USP-INDEXANALYSIS.md) for manual installation.
+
 Use:
 
 ```sql
-EXEC DBAdmin.dbo.usp_IndexAnalysis
+EXEC [YourUtilityDatabase].dbo.usp_IndexAnalysis
     @StatementPlanXml = @PlanXml,
     @Output = 'REALIGN',
     @RankingSource = 'BLEND';

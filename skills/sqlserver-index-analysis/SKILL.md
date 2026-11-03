@@ -33,14 +33,16 @@ If complete actual `SHOWPLAN_XML` is available and the user explicitly
 authorizes access to the intended SQL Server, run:
 
 ```sql
-EXEC DBAdmin.dbo.usp_IndexAnalysis
+EXEC [YourUtilityDatabase].dbo.usp_IndexAnalysis
     @StatementPlanXml = @PlanXml,
     @Output = 'REALIGN',
     @RankingSource = 'BLEND';
 ```
 
 `@PlanXml` represents the complete showplan document supplied by the user or
-captured through an authorized connection. Do not guess a server, database, or
+captured through an authorized connection. The procedure can be installed in
+any existing database; recommend a dedicated utility database such as `DBAdmin`
+and use the database the user identifies. Do not guess a server, database, or
 authentication method. The procedure output, missing-index hints, and generated
 DDL are candidates only; never execute generated `CREATE INDEX`, `ALTER INDEX`,
 `DROP INDEX`, or other schema-changing statements.

@@ -11,6 +11,7 @@ database.
 |---|---|
 | `sqlserver-index-analysis` | Evidence-backed conventional, covering, filtered, POC, and FPOC index analysis. |
 | `query-plan-analysis` plugin | Actual SQL Server execution-plan analysis from [Erik Darling's `sqlserver-query-plans` plugin](https://github.com/erikdarlingdata/claude-plugins/tree/main/plugins/sqlserver-query-plans), installed separately by the installer. |
+| `usp_IndexAnalysis.sql` | Optional SQL Server stored procedure for index analysis; install manually in a chosen database, preferably a DBA utility database. |
 | `copilot-subagent-governance` | Advisory lanes, reporting, and guardrails for Copilot subagents. |
 | `copilot-open-asks` | Tracks unresolved task questions and decisions. |
 | `copilot-session-recovery` | Uses native session recovery and compaction commands. |
@@ -52,9 +53,20 @@ Use /query-plan-analysis and /sqlserver-index-analysis to analyze this query
 and actual plan, then determine whether one index is justified.
 ```
 
-`sqlserver-index-analysis` can use `DBAdmin.dbo.usp_IndexAnalysis` only when
-the user explicitly authorizes access and supplies complete actual
+`sqlserver-index-analysis` can use `[YourUtilityDatabase].dbo.usp_IndexAnalysis`
+only when the user explicitly authorizes access and supplies complete actual
 `SHOWPLAN_XML`. Its output is candidate evidence, not executable DDL.
+
+## Optional `usp_IndexAnalysis` procedure
+
+The package includes `usp_IndexAnalysis.sql`. It is not deployed by
+`Install-GitHubCopilotMSSQL.ps1`; download and run it manually in any existing
+database you choose. A dedicated DBA utility database, such as `DBAdmin`, is
+recommended so the procedure can analyze other databases on the same instance
+without being coupled to an application database.
+
+See [USP-INDEXANALYSIS.md](USP-INDEXANALYSIS.md) for download, permissions,
+manual installation, and verification steps.
 
 ## Upstream attribution
 
@@ -81,6 +93,8 @@ authorship of or bundle its source code.
 |-- Install-GitHubCopilotMSSQL.ps1
 |-- INSTALL.md
 |-- PROMPTS.md
+|-- USP-INDEXANALYSIS.md
+|-- usp_IndexAnalysis.sql
 |-- skills/
 |   |-- sqlserver-index-analysis/
 |   |-- copilot-subagent-governance/

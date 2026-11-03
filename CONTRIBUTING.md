@@ -33,6 +33,10 @@ names, query text, parameter values, execution plans, and access tokens.
 - Generated index recommendations are review material, not commands to run.
 - Hook-like controls are described as advisory unless Copilot exposes an
   enforceable native capability.
+- `usp_IndexAnalysis.sql` is sourced from `cbragdon/sql-perf-diagnostics`.
+  Make procedure changes in that source repository before updating this
+  packaged copy. Preserve the upstream file verbatim, including its line
+  endings and whitespace.
 
 ## License
 

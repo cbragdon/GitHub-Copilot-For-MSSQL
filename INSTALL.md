@@ -8,8 +8,10 @@
 - An interactive terminal. The Copilot plugin installer may ask for
   confirmation.
 
-The package does not require SQL Server, `sqlcmd`, a connection string, or
-database credentials to install.
+The Copilot skills installer does not require SQL Server, `sqlcmd`, a
+connection string, or database credentials. `sqlcmd` is only needed if you
+choose the optional command-line procedure installation described in
+[USP-INDEXANALYSIS.md](USP-INDEXANALYSIS.md).
 
 ## Install
 
@@ -51,6 +53,15 @@ erikdarlingdata/claude-plugins:plugins/sqlserver-query-plans
 The installer uses GitHub Copilot CLI's plugin command. It does not use a
 Claude API or install a Claude runtime. The plugin remains Erik Darling's
 upstream work; this repository only installs it through Copilot CLI.
+
+## Optional `usp_IndexAnalysis` procedure
+
+`Install-GitHubCopilotMSSQL.ps1` does not deploy SQL Server objects. The
+included `usp_IndexAnalysis.sql` can be manually installed in any existing
+database; a dedicated utility database such as `DBAdmin` is recommended.
+
+See [USP-INDEXANALYSIS.md](USP-INDEXANALYSIS.md) for the separate download,
+permissions, and manual installation steps.
 
 ## Installer options
 

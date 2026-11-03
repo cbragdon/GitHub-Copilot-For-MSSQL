@@ -21,6 +21,8 @@ The project is designed to keep these boundaries:
 
 - The installer does not accept or store database credentials.
 - The skills do not connect to SQL Server by themselves.
+- `usp_IndexAnalysis.sql` is not executed by the installer. A user manually
+  chooses its database and authentication context before deployment.
 - The installer uses Copilot CLI's reviewed plugin installation flow.
 - Index DDL is never automatically executed.
 - The public `query-plan-analysis` capability comes from
