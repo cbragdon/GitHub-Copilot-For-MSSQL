@@ -10,6 +10,9 @@ __pycache__/
 *.zip
 *.log
 
+# Local reminder notes
+Sync.md
+
 # Editors
 .vscode/
 .idea/

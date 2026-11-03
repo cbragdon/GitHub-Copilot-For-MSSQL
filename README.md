@@ -108,28 +108,6 @@ for complete usage and recommendation details. Provide the original plan files
 to Copilot with the script output; the output supports analysis but does not
 replace plan evidence.
 
-## Biweekly Erik Darling extractor synchronization
-
-The repository vendors Erik Darling's `extract.py` as `plan_extract.py` for
-`ComparePlans_v1.py`. A GitHub Actions workflow checks upstream every day at
-13:15 UTC but only synchronizes on dates exactly 14 days after 2026-11-02.
-
-When the pinned upstream commit differs, the workflow updates only
-`plan_extract.py` and opens a pull request for review. It never pushes an
-upstream update directly to `main`. Run the workflow manually from the
-**Actions** tab when an out-of-cycle check is needed.
-
-## Biweekly Erik Darling reference monitoring
-
-A separate workflow watches
-`plugins/sqlserver-query-plans/skills/query-plan-analysis/references` every 14
-days from 2026-11-02. When upstream reference files change, it opens one GitHub
-issue listing the upstream commit and changed files for review. It does not
-copy, alter, or automatically adopt Erik Darling's reference material.
-
-The optional local plugin updater still fast-forwards an active local plugin
-checkout, including its references, and creates its own issue after an update.
-
 ## Optional local plugin auto-update
 
 The standard installer manages the public `sqlserver-query-plans` plugin.
