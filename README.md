@@ -152,6 +152,7 @@ authorship of or bundle its source code.
 
 ```text
 .
+|-- AGENTS.md
 |-- Install-GitHubCopilotMSSQL.ps1
 |-- INSTALL.md
 |-- PROMPTS.md
