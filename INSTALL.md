@@ -63,6 +63,21 @@ database; a dedicated utility database such as `DBAdmin` is recommended.
 See [USP-INDEXANALYSIS.md](USP-INDEXANALYSIS.md) for the separate download,
 permissions, and manual installation steps.
 
+## Optional `ComparePlans_v1.py`
+
+`ComparePlans_v1.py` is not installed or configured by the PowerShell
+installer. It runs with the Python standard library and compares two to four
+local **actual** `.sqlplan` files:
+
+```powershell
+python .\ComparePlans_v1.py baseline.sqlplan candidate.sqlplan --format md
+```
+
+See the upstream [usage guide](https://github.com/cbragdon/sql-perf-diagnostics/blob/main/USAGE-ComparePlans_v1.md)
+for all options. Its default mode is offline; `--analyze-indexes` is an
+explicit opt-in SQL Server connection mode and requires separately configured
+`sqlcmd` access.
+
 ## Installer options
 
 ```powershell

@@ -11,6 +11,7 @@ database.
 |---|---|
 | `sqlserver-index-analysis` | Evidence-backed conventional, covering, filtered, POC, and FPOC index analysis. |
 | `query-plan-analysis` plugin | Actual SQL Server execution-plan analysis from [Erik Darling's `sqlserver-query-plans` plugin](https://github.com/erikdarlingdata/claude-plugins/tree/main/plugins/sqlserver-query-plans), installed separately by the installer. |
+| `ComparePlans_v1.py` | Optional, deterministic offline comparison of two to four actual plan files, including aggregate and per-statement evidence. |
 | `usp_IndexAnalysis.sql` | Optional SQL Server stored procedure for index analysis; install manually in a chosen database, preferably a DBA utility database. |
 | `copilot-subagent-governance` | Advisory lanes, reporting, and guardrails for Copilot subagents. |
 | `copilot-open-asks` | Tracks unresolved task questions and decisions. |
@@ -68,6 +69,28 @@ without being coupled to an application database.
 See [USP-INDEXANALYSIS.md](USP-INDEXANALYSIS.md) for download, permissions,
 manual installation, and verification steps.
 
+## Optional `ComparePlans_v1.py`
+
+`ComparePlans_v1.py` is the deterministic, offline companion to the comparison
+prompt. Copilot provides qualitative diagnosis and recommendations; the script
+produces reproducible aggregate and per-statement measurements that support the
+comparison tables and result layout.
+
+It is optional and is not included in `Install-GitHubCopilotMSSQL.ps1`. By
+default it reads only local actual plan files and needs no database connection.
+Its opt-in `--analyze-indexes` mode can connect to SQL Server to run
+`usp_IndexAnalysis`; review the usage documentation before enabling that mode.
+
+```powershell
+python .\ComparePlans_v1.py baseline.sqlplan candidate.sqlplan --format md
+```
+
+See the upstream [usage guide](https://github.com/cbragdon/sql-perf-diagnostics/blob/main/USAGE-ComparePlans_v1.md)
+and [recommendations catalog](https://github.com/cbragdon/sql-perf-diagnostics/blob/main/ComparePlans-Recommendations-Catalog.md)
+for complete usage and recommendation details. Provide the original plan files
+to Copilot with the script output; the output supports analysis but does not
+replace plan evidence.
+
 ## Upstream attribution
 
 The `query-plan-analysis` capability is provided by
@@ -93,6 +116,9 @@ authorship of or bundle its source code.
 |-- Install-GitHubCopilotMSSQL.ps1
 |-- INSTALL.md
 |-- PROMPTS.md
+|-- ComparePlans_v1.py
+|-- plan_extract.py
+|-- LICENSE-plan_extract.txt
 |-- USP-INDEXANALYSIS.md
 |-- usp_IndexAnalysis.sql
 |-- skills/

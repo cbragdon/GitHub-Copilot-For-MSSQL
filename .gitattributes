@@ -1,1 +1,4 @@
 usp_IndexAnalysis.sql -text
+ComparePlans_v1.py -text
+plan_extract.py -text
+LICENSE-plan_extract.txt -text

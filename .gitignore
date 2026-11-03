@@ -2,6 +2,10 @@
 *.clixml
 *.ps1xml
 
+# Python
+__pycache__/
+*.py[cod]
+
 # Local archives and logs
 *.zip
 *.log
