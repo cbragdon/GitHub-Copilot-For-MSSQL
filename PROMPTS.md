@@ -27,6 +27,29 @@ candidate decision. Give its output and the original plan files to
 `query-plan-analysis`; the script makes measurements reproducible but does not
 replace Copilot's diagnosis, comparability assessment, or recommendations.
 
+## Prompt types
+
+### Plan diagnosis and index selection
+
+Use this prompt when you need to understand an actual plan before deciding
+whether an index or supported query change is justified. It combines Erik's
+runtime diagnosis with this package's one-candidate index decision and
+validation guidance.
+
+### Index selection only
+
+Use this prompt when `query-plan-analysis` has already produced a complete
+actual-plan diagnosis and you need a focused index decision. It avoids repeating
+plan triage while still requiring the digest, existing indexes, and workload
+evidence needed to assess overlap and maintenance cost.
+
+### Compare execution plans
+
+Use this prompt when evaluating a baseline against one or more candidate actual
+plans, such as a query rewrite, index change, or regression. It establishes
+whether the captures are comparable, explains measured differences, and avoids
+declaring a winner from estimated costs or non-equivalent test conditions.
+
 ## Required artifacts
 
 Provide the following artifacts with either prompt:
