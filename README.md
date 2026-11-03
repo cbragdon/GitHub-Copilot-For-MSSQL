@@ -22,9 +22,17 @@ The skills are personal Copilot skills installed under `~\.copilot\skills`.
 They can be used automatically when a request matches their description or
 explicitly with `/SKILL-NAME`.
 
+## Requirements
+
+- Python 3 is required for the plan extractor used by
+  `query-plan-analysis` and for the optional `ComparePlans_v1.py` tool.
+- GitHub Copilot CLI must be installed and authenticated.
+- Windows PowerShell is required to run the package installer.
+
 ## Quick start
 
-1. Install GitHub Copilot CLI and authenticate with GitHub.
+1. Install Python 3 and GitHub Copilot CLI, then authenticate Copilot with
+   GitHub.
 2. Clone or download this repository.
 3. In an interactive PowerShell terminal, run:
 
