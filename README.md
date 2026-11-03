@@ -108,24 +108,22 @@ for complete usage and recommendation details. Provide the original plan files
 to Copilot with the script output; the output supports analysis but does not
 replace plan evidence.
 
-## Optional local plugin auto-update
+## Update the plan-analysis plugin
 
-The standard installer manages the public `sqlserver-query-plans` plugin.
-If you instead use an enabled local marketplace checkout of Erik Darling's
-repository, register the optional local updater after confirming the checkout
-has no local changes:
+Check the installed plugin and its version:
 
 ```powershell
-.\scripts\Register-SqlServerQueryPlanPluginUpdater.ps1 `
-    -PluginRepositoryPath 'D:\SQLTools\erikdarling-claude-plugins'
+copilot plugin list
 ```
 
-The scheduled task runs daily at 09:00 local time but fast-forwards the active
-checkout only every 14 days from 2026-11-02. It refuses dirty or divergent
-checkouts, appends activity to
-`%LOCALAPPDATA%\GitHubCopilotMSSQL\logs\sqlserver-query-plans-update.log`, and
-creates a GitHub issue in this repository after a successful update. Start a
-new Copilot CLI session or run `/skills reload` after the issue notification.
+When an update is available, update Erik Darling's plan-analysis plugin:
+
+```powershell
+copilot plugin update sqlserver-query-plans
+```
+
+Then start a new Copilot CLI session, or run `/skills reload`, so Copilot loads
+the updated skill and its references.
 
 ## Upstream attribution
 
