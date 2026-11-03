@@ -1,0 +1,11 @@
+# PowerShell
+*.clixml
+*.ps1xml
+
+# Local archives and logs
+*.zip
+*.log
+
+# Editors
+.vscode/
+.idea/
