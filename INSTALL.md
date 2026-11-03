@@ -16,8 +16,8 @@ database credentials to install.
 Clone the repository:
 
 ```powershell
-git clone https://github.com/cbragdon/GitHub-For-MSSQL.git
-Set-Location .\GitHub-For-MSSQL
+git clone https://github.com/cbragdon/GitHub-Copilot-For-MSSQL.git
+Set-Location .\GitHub-Copilot-For-MSSQL
 ```
 
 Preview the changes:
