@@ -20,6 +20,13 @@ those references.
 resulting plan evidence and applies this package's distinct index-overlap,
 POC/FPOC, `usp_IndexAnalysis`, one-candidate, and validation rules.
 
+`ComparePlans_v1.py` is an optional comparison-evidence layer for two to four
+local actual plan files. Use it before the comparison prompt when you need
+repeatable aggregate and per-statement measurements to support a baseline versus
+candidate decision. Give its output and the original plan files to
+`query-plan-analysis`; the script makes measurements reproducible but does not
+replace Copilot's diagnosis, comparability assessment, or recommendations.
+
 ## Required artifacts
 
 Provide the following artifacts with either prompt:
