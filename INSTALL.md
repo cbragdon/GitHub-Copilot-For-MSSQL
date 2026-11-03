@@ -41,14 +41,16 @@ them:
 - `copilot-session-recovery`
 - `copilot-usage-budget`
 
-It installs and enables the public plugin source:
+It installs and enables the public `query-plan-analysis` plugin from
+[Erik Darling's `sqlserver-query-plans` repository component](https://github.com/erikdarlingdata/claude-plugins/tree/main/plugins/sqlserver-query-plans):
 
 ```text
 erikdarlingdata/claude-plugins:plugins/sqlserver-query-plans
 ```
 
 The installer uses GitHub Copilot CLI's plugin command. It does not use a
-Claude API or install a Claude runtime.
+Claude API or install a Claude runtime. The plugin remains Erik Darling's
+upstream work; this repository only installs it through Copilot CLI.
 
 ## Installer options
 

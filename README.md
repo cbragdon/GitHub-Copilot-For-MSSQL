@@ -10,7 +10,7 @@ database.
 | Component | Purpose |
 |---|---|
 | `sqlserver-index-analysis` | Evidence-backed conventional, covering, filtered, POC, and FPOC index analysis. |
-| `query-plan-analysis` plugin | Actual SQL Server execution-plan analysis, installed separately by the installer. |
+| `query-plan-analysis` plugin | Actual SQL Server execution-plan analysis from [Erik Darling's `sqlserver-query-plans` plugin](https://github.com/erikdarlingdata/claude-plugins/tree/main/plugins/sqlserver-query-plans), installed separately by the installer. |
 | `copilot-subagent-governance` | Advisory lanes, reporting, and guardrails for Copilot subagents. |
 | `copilot-open-asks` | Tracks unresolved task questions and decisions. |
 | `copilot-session-recovery` | Uses native session recovery and compaction commands. |
@@ -54,6 +54,13 @@ and actual plan, then determine whether one index is justified.
 `sqlserver-index-analysis` can use `DBAdmin.dbo.usp_IndexAnalysis` only when
 the user explicitly authorizes access and supplies complete actual
 `SHOWPLAN_XML`. Its output is candidate evidence, not executable DDL.
+
+## Upstream attribution
+
+The `query-plan-analysis` capability is provided by
+[Erik Darling's `sqlserver-query-plans` plugin](https://github.com/erikdarlingdata/claude-plugins/tree/main/plugins/sqlserver-query-plans).
+This repository installs that public GitHub Copilot plugin; it does not claim
+authorship of or bundle its source code.
 
 ## Safety and scope
 
