@@ -38,7 +38,8 @@ explicitly with `/SKILL-NAME`.
    ```
 
 See [INSTALL.md](INSTALL.md) for prerequisites, dry-run behavior, updates,
-validation, and uninstall steps.
+validation, and uninstall steps. See [PROMPTS.md](PROMPTS.md) for the
+copy-ready index-analysis prompts and required artifacts.
 
 ## SQL Server index workflow
 
@@ -79,6 +80,7 @@ authorship of or bundle its source code.
 .
 |-- Install-GitHubCopilotMSSQL.ps1
 |-- INSTALL.md
+|-- PROMPTS.md
 |-- skills/
 |   |-- sqlserver-index-analysis/
 |   |-- copilot-subagent-governance/
