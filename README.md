@@ -110,6 +110,11 @@ replace plan evidence.
 
 ## Update the plan-analysis plugin
 
+The plugin supplies the plan extractor and the upstream plan-diagnosis
+guidance and references used by this package. Updating can provide extractor
+fixes, improved diagnostics, and revised guidance for interpreting actual
+execution plans.
+
 Check the installed plugin and its version:
 
 ```powershell
