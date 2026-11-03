@@ -1,0 +1,116 @@
+name: Watch Erik Darling plan references
+
+on:
+  schedule:
+    - cron: "25 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: watch-erik-plan-references
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check biweekly schedule
+        id: schedule
+        shell: bash
+        run: |
+          anchor="2026-11-02"
+          today="$(date -u +%F)"
+          elapsed_days=$(( ($(date -u -d "$today" +%s) - $(date -u -d "$anchor" +%s)) / 86400 ))
+
+          if [[ "$elapsed_days" -ge 0 && $((elapsed_days % 14)) -eq 0 ]]; then
+            echo "due=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "due=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve upstream commit
+        id: upstream
+        if: github.event_name == 'workflow_dispatch' || steps.schedule.outputs.due == 'true'
+        shell: bash
+        run: |
+          ref="$(git ls-remote https://github.com/erikdarlingdata/claude-plugins.git refs/heads/main | awk '{print $1}')"
+          test -n "$ref"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - name: Compare upstream references
+        id: compare
+        if: github.event_name == 'workflow_dispatch' || steps.schedule.outputs.due == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_REF: ${{ steps.upstream.outputs.ref }}
+          INITIAL_REF: b0fe3d48938de595ec17b85409abc093860f6ac1
+        shell: bash
+        run: |
+          marker="$(gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --state all \
+            --search '"Erik query-plan-analysis references changed" in:title' \
+            --limit 100 \
+            --json body,createdAt \
+            --jq 'sort_by(.createdAt) | last | .body // empty')"
+          baseline="$(printf '%s\n' "$marker" | sed -n 's/.*<!-- erik-reference-ref: \([0-9a-f]\{40\}\) -->.*/\1/p')"
+          baseline="${baseline:-$INITIAL_REF}"
+
+          if [[ "$baseline" == "$UPSTREAM_REF" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git init --quiet upstream
+          git -C upstream remote add origin https://github.com/erikdarlingdata/claude-plugins.git
+          git -C upstream fetch --quiet --no-tags origin main
+          changed_files="$(git -C upstream diff --name-status "$baseline" "$UPSTREAM_REF" -- \
+            plugins/sqlserver-query-plans/skills/query-plan-analysis/references)"
+
+          {
+            echo "changed=false"
+            echo "baseline=$baseline"
+            echo "changed_files<<EOF"
+            printf '%s\n' "$changed_files"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          if [[ -n "$changed_files" ]]; then
+            {
+              echo "changed=true"
+              echo "changed_files<<EOF"
+              printf '%s\n' "$changed_files"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create change notification issue
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASELINE: ${{ steps.compare.outputs.baseline }}
+          UPSTREAM_REF: ${{ steps.upstream.outputs.ref }}
+          CHANGED_FILES: ${{ steps.compare.outputs.changed_files }}
+        shell: bash
+        run: |
+          short_ref="${UPSTREAM_REF:0:12}"
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Erik query-plan-analysis references changed at $short_ref" \
+            --body "Erik Darling's query-plan-analysis reference files changed upstream.
+
+          <!-- erik-reference-ref: $UPSTREAM_REF -->
+
+          - Previous notified commit: \`$BASELINE\`
+          - Upstream commit: \`$UPSTREAM_REF\`
+          - Directory: \`plugins/sqlserver-query-plans/skills/query-plan-analysis/references\`
+
+          Changed files:
+          \`\`\`text
+          $CHANGED_FILES
+          \`\`\`
+
+          Review the upstream changes before adjusting this package's layered index-analysis process."

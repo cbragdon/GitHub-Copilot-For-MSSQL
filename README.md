@@ -110,6 +110,17 @@ When the pinned upstream commit differs, the workflow updates only
 upstream update directly to `main`. Run the workflow manually from the
 **Actions** tab when an out-of-cycle check is needed.
 
+## Biweekly Erik Darling reference monitoring
+
+A separate workflow watches
+`plugins/sqlserver-query-plans/skills/query-plan-analysis/references` every 14
+days from 2026-11-02. When upstream reference files change, it opens one GitHub
+issue listing the upstream commit and changed files for review. It does not
+copy, alter, or automatically adopt Erik Darling's reference material.
+
+The optional local plugin updater still fast-forwards an active local plugin
+checkout, including its references, and creates its own issue after an update.
+
 ## Optional local plugin auto-update
 
 The standard installer manages the public `sqlserver-query-plans` plugin.
@@ -161,6 +172,7 @@ authorship of or bundle its source code.
 |-- scripts/Update-SqlServerQueryPlanPlugin.ps1
 |-- scripts/Register-SqlServerQueryPlanPluginUpdater.ps1
 |-- .github/workflows/sync-erik-plan-extract.yml
+|-- .github/workflows/watch-erik-plan-references.yml
 |-- USP-INDEXANALYSIS.md
 |-- usp_IndexAnalysis.sql
 |-- skills/
