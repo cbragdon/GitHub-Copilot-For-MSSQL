@@ -135,10 +135,17 @@ if (-not $SkipQueryPlanPlugin) {
         }
     }
 
-    $plugins = (& $copilot.Source plugin list | Out-String)
-    if ($plugins -notmatch [regex]::Escape($pluginName)) {
-        throw "Copilot did not report installed plugin '$pluginName'."
+    $pluginDetails = (& $copilot.Source plugin list --json | ConvertFrom-Json)
+    $enabledPlanPlugins = @(
+        $pluginDetails | Where-Object {
+            $_.name -eq $pluginName -and $_.enabled -eq $true
+        }
+    )
+    if ($enabledPlanPlugins.Count -eq 0) {
+        throw "Copilot did not report an enabled '$pluginName' plugin."
     }
+
+    Write-Host '  plan diagnosis : enabled (query-plan-analysis runs before index selection)'
 }
 
 Write-Host ''

@@ -47,12 +47,20 @@ copy-ready index-analysis prompts and required artifacts.
 
 For an index decision, provide the query text, representative parameter values,
 an **actual** execution plan, existing indexes, and Query Store evidence when
-available. Use both skills when plan diagnosis and index selection are needed:
+available. Use both skills as a layered workflow when plan diagnosis and index
+selection are needed:
 
 ```text
 Use /query-plan-analysis and /sqlserver-index-analysis to analyze this query
 and actual plan, then determine whether one index is justified.
 ```
+
+`query-plan-analysis` is the plan-diagnosis authority: it extracts the plan
+digest and applies its timing, warnings, cardinality, parallelism, index, and
+rewrite references as applicable. `sqlserver-index-analysis` then uses that
+evidence for the package's distinct overlap analysis, POC/FPOC design,
+`usp_IndexAnalysis` interpretation, one-candidate limit, and validation rules.
+The package does not copy or replace Erik Darling's plugin references.
 
 `sqlserver-index-analysis` can use `[YourUtilityDatabase].dbo.usp_IndexAnalysis`
 only when the user explicitly authorizes access and supplies complete actual

@@ -54,6 +54,11 @@ The installer uses GitHub Copilot CLI's plugin command. It does not use a
 Claude API or install a Claude runtime. The plugin remains Erik Darling's
 upstream work; this repository only installs it through Copilot CLI.
 
+The installer verifies that at least one `sqlserver-query-plans` plugin is
+enabled. That plugin diagnoses the plan and consults its applicable upstream
+references; the installed `sqlserver-index-analysis` skill then evaluates an
+index candidate from those plan facts.
+
 ## Optional `usp_IndexAnalysis` procedure
 
 `Install-GitHubCopilotMSSQL.ps1` does not deploy SQL Server objects. The
@@ -112,7 +117,8 @@ copilot plugin list
 Invoke a skill explicitly when desired:
 
 ```text
-/sqlserver-index-analysis Analyze this query and actual plan.
+/query-plan-analysis Diagnose this actual plan using the applicable references.
+/sqlserver-index-analysis Use that plan diagnosis to evaluate one index candidate.
 /copilot-subagent-governance Coordinate these independent tasks.
 ```
 

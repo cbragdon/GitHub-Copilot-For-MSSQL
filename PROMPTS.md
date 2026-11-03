@@ -9,6 +9,17 @@ The `query-plan-analysis` skill is provided by
 This repository installs the plugin through GitHub Copilot CLI and does not
 bundle or claim authorship of its source.
 
+## Layered analysis process
+
+`query-plan-analysis` is the plan-diagnosis layer. It extracts the plan digest
+and uses its upstream timing, warnings, cardinality, parallelism, index, and
+rewrite references when their conditions apply. Do not bypass or duplicate
+those references.
+
+`sqlserver-index-analysis` is the index-decision layer. It consumes the
+resulting plan evidence and applies this package's distinct index-overlap,
+POC/FPOC, `usp_IndexAnalysis`, one-candidate, and validation rules.
+
 ## Required artifacts
 
 Provide the following artifacts with either prompt:
@@ -51,6 +62,9 @@ warnings, spills, memory grants, compiled versus runtime parameters, and
 parallelism. Do not use estimated cost percentages as measurements. Do not
 call a scan or key lookup bad without row-count and runtime evidence. Treat
 missing-index suggestions and generated index DDL only as hypotheses.
+Use the applicable `query-plan-analysis` references for timing, warnings,
+cardinality, parallelism, indexes, and rewrites before moving to index
+selection.
 
 Also assess whether a query or script change would remove a demonstrated cause.
 Recommend a script change only when the actual plan supports its mechanism.
@@ -103,7 +117,8 @@ to assess supplied evidence without a separate plan-diagnosis request.
 Use /sqlserver-index-analysis.
 
 Evaluate this SQL Server query for one evidence-backed index recommendation. I
-am providing the query, representative parameter values, actual plan digest,
+am providing the query, representative parameter values, an actual plan digest
+already produced with /query-plan-analysis and its applicable references,
 existing indexes, Query Store evidence, and
 [YourUtilityDatabase].dbo.usp_IndexAnalysis REALIGN
 output where available.
