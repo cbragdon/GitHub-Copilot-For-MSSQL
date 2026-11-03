@@ -26,6 +26,7 @@ explicitly with `/SKILL-NAME`.
 
 - Python 3 is required for the plan extractor used by
   `query-plan-analysis` and for the optional `ComparePlans_v1.py` tool.
+  Python 3.13.17 was used for package testing.
 - GitHub Copilot CLI must be installed and authenticated.
 - Windows PowerShell is required to run the package installer.
 
