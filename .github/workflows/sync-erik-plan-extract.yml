@@ -1,0 +1,81 @@
+name: Sync Erik Darling plan extractor
+
+on:
+  schedule:
+    - cron: "15 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check biweekly schedule
+        id: schedule
+        shell: bash
+        run: |
+          anchor="2026-11-02"
+          today="$(date -u +%F)"
+          elapsed_days=$(( ($(date -u -d "$today" +%s) - $(date -u -d "$anchor" +%s)) / 86400 ))
+
+          if [[ "$elapsed_days" -ge 0 && $((elapsed_days % 14)) -eq 0 ]]; then
+            echo "due=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "due=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve upstream commit
+        id: upstream
+        if: github.event_name == 'workflow_dispatch' || steps.schedule.outputs.due == 'true'
+        shell: bash
+        run: |
+          ref="$(git ls-remote https://github.com/erikdarlingdata/claude-plugins.git refs/heads/main | awk '{print $1}')"
+          test -n "$ref"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - name: Synchronize vendored extractor
+        id: sync
+        if: github.event_name == 'workflow_dispatch' || steps.schedule.outputs.due == 'true'
+        run: python scripts/sync_erik_plan_extract.py --ref "${{ steps.upstream.outputs.ref }}"
+
+      - name: Open review pull request
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_REF: ${{ steps.sync.outputs.source_ref }}
+          SOURCE_SHA256: ${{ steps.sync.outputs.source_sha256 }}
+          SOURCE_URL: ${{ steps.sync.outputs.source_url }}
+        shell: bash
+        run: |
+          existing="$(gh pr list --state open --search '"Sync plan_extract.py from Erik Darling" in:title' --json number --jq 'length')"
+          if [[ "$existing" -gt 0 ]]; then
+            echo "An extractor synchronization pull request is already open."
+            exit 0
+          fi
+
+          branch="automation/sync-erik-plan-extract-${GITHUB_RUN_ID}"
+          git switch -c "$branch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add plan_extract.py
+          git commit -m "Sync plan_extract.py from Erik Darling"
+          git push --set-upstream origin "$branch"
+
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "Sync plan_extract.py from Erik Darling" \
+            --body "Updates the vendored extractor from Erik Darling's repository for review.
+
+          - Upstream commit: \`$SOURCE_REF\`
+          - Source SHA-256: \`$SOURCE_SHA256\`
+          - Source URL: $SOURCE_URL
+
+          This PR was created by the scheduled synchronization workflow; it does not merge automatically."

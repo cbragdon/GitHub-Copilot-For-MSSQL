@@ -91,6 +91,17 @@ for complete usage and recommendation details. Provide the original plan files
 to Copilot with the script output; the output supports analysis but does not
 replace plan evidence.
 
+## Biweekly Erik Darling extractor synchronization
+
+The repository vendors Erik Darling's `extract.py` as `plan_extract.py` for
+`ComparePlans_v1.py`. A GitHub Actions workflow checks upstream every day at
+13:15 UTC but only synchronizes on dates exactly 14 days after 2026-11-02.
+
+When the pinned upstream commit differs, the workflow updates only
+`plan_extract.py` and opens a pull request for review. It never pushes an
+upstream update directly to `main`. Run the workflow manually from the
+**Actions** tab when an out-of-cycle check is needed.
+
 ## Upstream attribution
 
 The `query-plan-analysis` capability is provided by
@@ -119,6 +130,8 @@ authorship of or bundle its source code.
 |-- ComparePlans_v1.py
 |-- plan_extract.py
 |-- LICENSE-plan_extract.txt
+|-- scripts/sync_erik_plan_extract.py
+|-- .github/workflows/sync-erik-plan-extract.yml
 |-- USP-INDEXANALYSIS.md
 |-- usp_IndexAnalysis.sql
 |-- skills/
