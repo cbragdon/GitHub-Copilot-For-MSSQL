@@ -102,6 +102,25 @@ When the pinned upstream commit differs, the workflow updates only
 upstream update directly to `main`. Run the workflow manually from the
 **Actions** tab when an out-of-cycle check is needed.
 
+## Optional local plugin auto-update
+
+The standard installer manages the public `sqlserver-query-plans` plugin.
+If you instead use an enabled local marketplace checkout of Erik Darling's
+repository, register the optional local updater after confirming the checkout
+has no local changes:
+
+```powershell
+.\scripts\Register-SqlServerQueryPlanPluginUpdater.ps1 `
+    -PluginRepositoryPath 'D:\SQLTools\erikdarling-claude-plugins'
+```
+
+The scheduled task runs daily at 09:00 local time but fast-forwards the active
+checkout only every 14 days from 2026-11-02. It refuses dirty or divergent
+checkouts, appends activity to
+`%LOCALAPPDATA%\GitHubCopilotMSSQL\logs\sqlserver-query-plans-update.log`, and
+creates a GitHub issue in this repository after a successful update. Start a
+new Copilot CLI session or run `/skills reload` after the issue notification.
+
 ## Upstream attribution
 
 The `query-plan-analysis` capability is provided by
@@ -131,6 +150,8 @@ authorship of or bundle its source code.
 |-- plan_extract.py
 |-- LICENSE-plan_extract.txt
 |-- scripts/sync_erik_plan_extract.py
+|-- scripts/Update-SqlServerQueryPlanPlugin.ps1
+|-- scripts/Register-SqlServerQueryPlanPluginUpdater.ps1
 |-- .github/workflows/sync-erik-plan-extract.yml
 |-- USP-INDEXANALYSIS.md
 |-- usp_IndexAnalysis.sql
