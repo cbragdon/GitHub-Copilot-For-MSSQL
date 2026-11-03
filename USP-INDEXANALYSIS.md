@@ -51,6 +51,11 @@ The script uses `CREATE OR ALTER PROCEDURE`, so it can create the procedure or
 replace its definition in the selected database. It contains no `USE` statement;
 the database selected in the query window controls where it is installed.
 
+Before creating or altering the procedure, the script sets `ANSI_NULLS`,
+`ANSI_PADDING`, `ANSI_WARNINGS`, `ARITHABORT`,
+`CONCAT_NULL_YIELDS_NULL`, and `QUOTED_IDENTIFIER` to `ON`, and
+`NUMERIC_ROUNDABORT` to `OFF`.
+
 ### sqlcmd
 
 Use Windows Integrated authentication and replace the instance and database

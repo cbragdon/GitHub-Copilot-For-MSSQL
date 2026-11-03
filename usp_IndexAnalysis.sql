@@ -53,7 +53,17 @@
 ==================================================================================================*/
 SET ANSI_NULLS ON;
 GO
+SET ANSI_PADDING ON;
+GO
+SET ANSI_WARNINGS ON;
+GO
+SET ARITHABORT ON;
+GO
+SET CONCAT_NULL_YIELDS_NULL ON;
+GO
 SET QUOTED_IDENTIFIER ON;
+GO
+SET NUMERIC_ROUNDABORT OFF;
 GO
 CREATE OR ALTER PROCEDURE dbo.usp_IndexAnalysis
     /*  Cross-database scope -------------------------------------------------------------------- */
