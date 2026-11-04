@@ -34,6 +34,9 @@ an instruction or safety rule, not only the command to run.
   `main` directly.
 - The reference watcher opens an issue when Erik's upstream reference files
   change. It reports changes; it does not vendor or automatically adopt them.
+  Before closing that issue, read every changed or newly added reference in
+  full, assess the layered skills and prompts, and record any package change or
+  justified no-change decision in the issue.
 - `Sync.md` is an ignored personal reminder file. Do not add it to commits.
 
 ## Validation

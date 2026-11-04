@@ -113,4 +113,15 @@ jobs:
           $CHANGED_FILES
           \`\`\`
 
-          Review the upstream changes before adjusting this package's layered index-analysis process."
+          ## Required review
+
+          - [ ] Read every changed or newly added reference file in full.
+          - [ ] Determine whether the plan-diagnosis, index-decision, prompt,
+            or maintainer guidance needs to change.
+          - [ ] Update this package when the new guidance affects its layered
+            analysis process, then validate the changed files.
+          - [ ] Record the decision and any resulting commit in this issue.
+
+          Do not close this issue after reviewing filenames alone. The purpose
+          is to understand upstream guidance and keep this package aligned with
+          it."
