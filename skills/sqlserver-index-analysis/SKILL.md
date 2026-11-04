@@ -38,7 +38,11 @@ index conclusion:
   reports those conditions.
 - Read its index guidance before interpreting missing-index hints or proposing
   index DDL.
+- Read its operator guidance when a join, spool, Sort, aggregate, Filter, or
+  scalar UDF is the proposed index or rewrite mechanism.
 - Read its rewrite guidance before recommending a query or script change.
+- If Python is unavailable, follow its extraction fallback and state its
+  limitations. Do not rank operators manually from raw plan XML.
 
 Use the resulting digest as the evidence for this skill. Do not copy, replace,
 or contradict the upstream plan-diagnosis workflow. If its required evidence is
@@ -81,6 +85,8 @@ Before considering an index, establish:
   extended instead.
 
 Do not call scans or lookups bad without row-count and runtime evidence.
+Do not treat exchange timing as operator time; the plan-diagnosis layer must
+first account for worker-thread distribution and downstream waits.
 
 Recommend a query or script change only when actual plan evidence supports its
 mechanism. Name the expected plan change and do not claim that two SQL
@@ -100,9 +106,20 @@ unnecessary duplication or overlap. Select the index pattern from the evidence:
 - Use POC/FPOC ordering only for demonstrated window or grouping work.
 
 For conventional rowstore candidates, order key columns as equality predicates
-first, then the most useful join or range predicate, followed by columns needed
-to eliminate a demonstrated ordering operation. Do not expect keys after the
-first range predicate to participate in a seek.
+first, normally by selectivity, then the most useful join or range predicate,
+followed by columns needed to eliminate a demonstrated ordering operation. Do
+not expect keys after the first range predicate to participate in a seek.
+
+For a selective scan, compare actual rows read with actual rows emitted to show
+that a predicate was applied as a filter rather than a seek. For a lookup,
+evaluate actual executions and whether a residual predicate causes rows to be
+looked up only to be discarded; only then decide whether a key or `INCLUDE`
+change is justified.
+
+Treat an eager index spool as a candidate only after confirming it is not an
+update-plan Halloween-protection spool. Use its demonstrated seek predicate and
+output needs as evidence, then still check selectivity, existing-index overlap,
+and maintenance cost before recommending permanent DDL.
 
 For a POC/FPOC candidate, validate key order as:
 

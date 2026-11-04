@@ -13,8 +13,9 @@ bundle or claim authorship of its source.
 
 `query-plan-analysis` is the plan-diagnosis layer. It extracts the plan digest
 and uses its upstream timing, warnings, cardinality, parallelism, index, and
-rewrite references when their conditions apply. Do not bypass or duplicate
-those references.
+rewrite references when their conditions apply. It also supplies
+operator-specific interpretation and a limited extraction fallback when Python
+is unavailable. Do not bypass or duplicate those references.
 
 `sqlserver-index-analysis` is the index-decision layer. It consumes the
 resulting plan evidence and applies this package's distinct index-overlap,
@@ -93,8 +94,9 @@ parallelism. Do not use estimated cost percentages as measurements. Do not
 call a scan or key lookup bad without row-count and runtime evidence. Treat
 missing-index suggestions and generated index DDL only as hypotheses.
 Use the applicable `query-plan-analysis` references for timing, warnings,
-cardinality, parallelism, indexes, and rewrites before moving to index
-selection.
+cardinality, parallelism, operators, indexes, and rewrites before moving to
+index selection. If Python is unavailable, follow its extraction fallback and
+state its limits rather than ranking raw plan XML manually.
 
 Also assess whether a query or script change would remove a demonstrated cause.
 Recommend a script change only when the actual plan supports its mechanism.
