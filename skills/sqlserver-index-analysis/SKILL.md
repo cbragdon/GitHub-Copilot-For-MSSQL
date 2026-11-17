@@ -34,8 +34,11 @@ plan facts first. Use that plugin's applicable references before drawing an
 index conclusion:
 
 - Read its timing guidance before identifying a bottleneck.
-- Read its warnings, cardinality, and parallelism guidance when the digest
-  reports those conditions.
+- Read its cardinality guidance whenever comparing actual and estimated rows
+  per execution; parallel plans require choosing the execution count according
+  to the operator's position in the plan.
+- Read its warnings and parallelism guidance when the digest reports those
+  conditions.
 - Read its index guidance before interpreting missing-index hints or proposing
   index DDL.
 - Read its operator guidance when a join, spool, Sort, aggregate, Filter, or

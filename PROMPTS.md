@@ -93,10 +93,11 @@ warnings, spills, memory grants, compiled versus runtime parameters, and
 parallelism. Do not use estimated cost percentages as measurements. Do not
 call a scan or key lookup bad without row-count and runtime evidence. Treat
 missing-index suggestions and generated index DDL only as hypotheses.
-Use the applicable `query-plan-analysis` references for timing, warnings,
-cardinality, parallelism, operators, indexes, and rewrites before moving to
-index selection. If Python is unavailable, follow its extraction fallback and
-state its limits rather than ranking raw plan XML manually.
+Use the applicable `query-plan-analysis` references for timing, cardinality
+(including its per-execution and parallel-thread rules), warnings, parallelism,
+operators, indexes, and rewrites before moving to index selection. If Python is
+unavailable, follow its extraction fallback and state its limits rather than
+ranking raw plan XML manually.
 
 Also assess whether a query or script change would remove a demonstrated cause.
 Recommend a script change only when the actual plan supports its mechanism.
